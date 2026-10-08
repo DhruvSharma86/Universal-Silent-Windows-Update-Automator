@@ -1,6 +1,6 @@
 # Universal Silent Windows Update Automator
 
-A PowerShell-based automation system that silently keeps Windows, drivers, applications, Microsoft Store packages, NVIDIA software, Armoury Crate, Steam, Epic Games, and other supported gaming launchers up to date when Wi-Fi connects.
+A PowerShell-based automation system that silently keeps Windows, drivers, applications, Microsoft Store packages, NVIDIA software, Armoury Crate, Steam, Epic Games, and other supported gaming launchers up to date once per day when Wi-Fi is connected.
 
 The project is designed to run in the background with no reports or persistent logs, no forced Windows restart, and no unnecessary user interaction.
 
@@ -16,7 +16,8 @@ The project is designed to run in the background with no reports or persistent l
 - 🖥️ Best-effort NVIDIA software update support
 - 💻 Best-effort ASUS Armoury Crate support
 - 🎮 Detection/support paths for EA App, Ubisoft Connect, Battle.net, Xbox, Riot Client, Rockstar Games Launcher and GOG Galaxy
-- 📶 Wi-Fi-aware execution
+- 📅 Daily scheduled execution (3 AM ± 4hr random delay)
+- 📶 Wi-Fi-aware execution (only runs updates when connected)
 - 🔒 Named mutex prevents concurrent runs
 - 🤫 Hidden/background execution
 - ⏱️ Timeout protection
@@ -28,39 +29,36 @@ The project is designed to run in the background with no reports or persistent l
 ## How It Works
 
 ```text
-Wi-Fi connects
-      │
-      ▼
-NetworkProfile Event ID 10000
-      │
-      ▼
+Daily trigger (3 AM ± 4hr random)
+       │
+       ▼
 Task Scheduler
-      │
-      ▼
+       │
+       ▼
 Hidden VBS launcher
-      │
-      ▼
+       │
+       ▼
 PowerShell -WindowStyle Hidden
-      │
-      ▼
+       │
+       ▼
 Acquire mutex
-      │
-      ▼
+       │
+       ▼
 Verify Wi-Fi
-      │
-      ├── Windows Update
-      ├── WinGet
-      ├── Microsoft Store
-      ├── NVIDIA
-      ├── Armoury Crate
-      ├── Steam
-      ├── Epic Games
-      └── Other supported launchers
-      │
-      ▼
+       │
+       ├── Windows Update
+       ├── WinGet
+       ├── Microsoft Store
+       ├── NVIDIA
+       ├── Armoury Crate
+       ├── Steam
+       ├── Epic Games
+       └── Other supported launchers
+       │
+       ▼
 Release mutex
-      │
-      ▼
+       │
+       ▼
 Exit silently
 ```
 
@@ -226,7 +224,7 @@ The project files can then be deleted normally.
 | Setting | Value |
 |---|---|
 | Task name | `Codex Background Update Check` |
-| Trigger | NetworkProfile Operational Event ID 10000 |
+| Trigger | Daily at 3:00 AM (with 0-4 hour random delay) |
 | User | Current interactive user |
 | Privilege | Least privilege |
 | Hidden | Yes |

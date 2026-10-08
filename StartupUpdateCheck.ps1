@@ -4,7 +4,7 @@
 .DESCRIPTION
     Automatically updates Windows, drivers, Microsoft Store apps, WinGet packages,
     NVIDIA software, Armoury Crate, Steam, Epic Games, and other gaming launchers
-    when Wi-Fi connects. Runs silently in background with no reports, no forced reboots.
+    once per day when Wi-Fi is connected. Runs silently in background with no reports, no forced reboots.
 #>
 
 param(

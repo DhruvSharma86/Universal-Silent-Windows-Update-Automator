@@ -25,13 +25,17 @@ $taskXml = @"
 <?xml version="1.0" encoding="UTF-16"?>
 <Task version="1.4" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
   <RegistrationInfo>
-    <Description>Silently updates Windows, drivers, Microsoft Store apps, WinGet packages, NVIDIA, Armoury Crate, Steam, Epic Games, and other gaming launchers after Wi-Fi connects. Never restarts Windows automatically.</Description>
+    <Description>Silently updates Windows, drivers, Microsoft Store apps, WinGet packages, NVIDIA, Armoury Crate, Steam, Epic Games, and other gaming launchers once per day when Wi-Fi is connected. Never restarts Windows automatically.</Description>
   </RegistrationInfo>
   <Triggers>
-    <EventTrigger>
+    <CalendarTrigger>
       <Enabled>true</Enabled>
-      <Subscription>&lt;QueryList&gt;&lt;Query Id="0" Path="Microsoft-Windows-NetworkProfile/Operational"&gt;&lt;Select Path="Microsoft-Windows-NetworkProfile/Operational"&gt;*[System[(EventID=10000)]]&lt;/Select&gt;&lt;/Query&gt;&lt;/QueryList&gt;</Subscription>
-    </EventTrigger>
+      <StartBoundary>2026-10-08T03:00:00</StartBoundary>
+      <ScheduleByDay>
+        <DaysInterval>1</DaysInterval>
+      </ScheduleByDay>
+      <RandomDelay>PT4H</RandomDelay>
+    </CalendarTrigger>
   </Triggers>
   <Principals>
     <Principal id="Author">
@@ -56,7 +60,7 @@ $taskXml = @"
   <Actions Context="Author">
     <Exec>
       <Command>%SystemRoot%\System32\wscript.exe</Command>
-      <Arguments>//B //NoLogo &quot;$escapedLauncherPath&quot;</Arguments>
+      <Arguments>//B //NoLogo "$escapedLauncherPath"</Arguments>
     </Exec>
   </Actions>
 </Task>
@@ -72,5 +76,6 @@ try {
 }
 
 Write-Host "Registered scheduled task: $TaskName"
-Write-Host "Trigger: Wi-Fi/network connection event (runs only after Wi-Fi is confirmed)"
+Write-Host "Trigger: Daily at 3:00 AM (with up to 4-hour random delay)"
+Write-Host "Runs only when Wi-Fi is connected (checked by script)"
 Write-Host "Hidden launcher: $launcherPath"
